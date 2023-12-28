@@ -5,7 +5,7 @@ Deploys AUTOMATIC1111/stable-diffusion-webui as serverless worker on Modal.com
 ## Usage
 Quickstart:
 ```
-git clone .... && cd serverless-img-gen
+git clone https://github.com/zhaobenny/a1111-modal-worker && cd a1111-modal-worker
 pip install modal && modal token new
 ./deploy.sh
 ```
@@ -21,4 +21,5 @@ modal run a1111_modal_worker/download.py
 - over 50s response time (including for simple requests)
 - no extension support yet
 - need to add auth to api endpoints
+- settings won't get saved if adjusted (use `overwrite` folder)
 - very WIP
