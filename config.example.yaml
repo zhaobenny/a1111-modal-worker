@@ -1,0 +1,15 @@
+# extra models and concepts to download
+# note that the urls should be direct download links
+
+CHECKPOINTS_URLS:
+  - 'https://civitai.com/api/download/models/119057'
+
+VAE_URLS: []
+
+LORAS_URLS:
+  - 'https://civitai.com/api/download/models/231021'
+  - 'https://huggingface.co/hollowstrawberry/holotard/resolve/main/loras/kiryu_coco_5_outfits.safetensors?download=true'
+
+EMBEDDINGS_URLS:
+  - 'https://civitai.com/api/download/models/94057'
+

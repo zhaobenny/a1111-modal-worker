@@ -1,0 +1,8 @@
+.python-version
+.venv/
+__pycache__/
+
+*.safetensors
+*.pt
+test.py
+config.yaml
