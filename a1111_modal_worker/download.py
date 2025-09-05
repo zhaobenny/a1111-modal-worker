@@ -10,10 +10,14 @@ MODELS = "/models"
 app = App("a1111")
 user_models = Volume.from_name("a1111-user-models", create_if_missing=True)
 
+downloader_image = (
+    Image.debian_slim(python_version="3.10")
+    .pip_install(["httpx"])
+    .add_local_python_source("a1111_modal_worker")
+)
 
 @app.function(volumes={MODELS: user_models},
-              image=Image.debian_slim(python_version="3.10")
-              .pip_install(["httpx"])
+              image=downloader_image
               )
 def download_all(models: UserModels):
     download_type(models.embeddings_urls, "embeddings")

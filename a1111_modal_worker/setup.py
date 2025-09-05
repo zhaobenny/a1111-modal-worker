@@ -32,7 +32,8 @@ image = (
         {"LD_PRELOAD": "/usr/lib/x86_64-linux-gnu/libtcmalloc.so.4"}
     ).run_commands(
         "pip3 install httpx",
-        "pip3 install pyyaml"
+        "pip3 install pyyaml",
+        "pip3 install fastapi",
     ).run_commands(
         "pip3 install xformers",
         gpu=MODAL_GPU
@@ -47,6 +48,7 @@ image = (
     .add_local_dir(
         "./overwrite/", "/stable-diffusion-webui"
     )
+    .add_local_python_source("a1111_modal_worker")
 )
 
 
