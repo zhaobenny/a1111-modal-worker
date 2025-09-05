@@ -1,20 +1,20 @@
 import os
 
 import httpx
-from modal import Image, Stub, Volume
+from modal import App, Image, Volume
 
 from a1111_modal_worker.utils import UserModels, get_urls
 
 MODELS = "/models"
 
-stub = Stub("a1111")
-user_models = Volume.persisted("a1111-user-models")
+app = App("a1111")
+user_models = Volume.from_name("a1111-user-models", create_if_missing=True)
 
 
-@stub.function(volumes={MODELS: user_models},
-               image=Image.debian_slim(python_version="3.10")
-               .pip_install(["httpx"])
-               )
+@app.function(volumes={MODELS: user_models},
+              image=Image.debian_slim(python_version="3.10")
+              .pip_install(["httpx"])
+              )
 def download_all(models: UserModels):
     download_type(models.embeddings_urls, "embeddings")
     download_type(models.loras_urls, "loras")
@@ -73,7 +73,7 @@ def extract_filename(url, headers):
     return filename.strip(";").strip("\"")
 
 
-@stub.local_entrypoint()
+@app.local_entrypoint()
 def download_models():
     urls: UserModels = get_urls()
     download_all.remote(urls)

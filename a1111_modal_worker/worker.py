@@ -3,11 +3,11 @@ import time
 
 from modal import method
 
-from a1111_modal_worker.setup import image, stub, user_models
+from a1111_modal_worker.setup import app, image, user_models
 from a1111_modal_worker.utils import MODAL_GPU, START_CMD, wait_for_port
 
 
-@stub.cls(gpu=MODAL_GPU, image=image, volumes={"/models": user_models})
+@app.cls(gpu=MODAL_GPU, image=image, volumes={"/models": user_models})
 class A1111:
     BASE_URL = "http://127.0.0.1:7860"
 

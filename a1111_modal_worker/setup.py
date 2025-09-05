@@ -4,13 +4,13 @@ import subprocess
 import time
 import webbrowser
 
-from modal import Image, Stub, Volume, forward
+from modal import App, Image, Volume, forward
 
 from a1111_modal_worker.utils import (ALWAYS_GET_LATEST_A1111, MODAL_GPU,
                                       START_CMD, wait_for_port)
 
-stub = Stub("a1111")
-user_models = Volume.persisted("a1111-user-models")
+app = App("a1111")
+user_models = Volume.from_name("a1111-user-models", create_if_missing=True)
 
 
 def initialize_webui():
@@ -39,18 +39,18 @@ image = (
     ).run_commands(
         "wget -q https://raw.githubusercontent.com/AUTOMATIC1111/stable-diffusion-webui/master/webui.sh",
         "chmod +x webui.sh",
-        force_build=ALWAYS_GET_LATEST_A1111
     ).run_function(
         initialize_webui,
-        gpu=MODAL_GPU
+        gpu=MODAL_GPU,
+        force_build=ALWAYS_GET_LATEST_A1111,
     )
-    .copy_local_dir(
+    .add_local_dir(
         "./overwrite/", "/stable-diffusion-webui"
     )
 )
 
 
-@stub.function(gpu=MODAL_GPU, image=image, volumes={"/models/": user_models})
+@app.function(gpu=MODAL_GPU, image=image, volumes={"/models/": user_models})
 def web_instance():
     with forward(7860) as tunnel:
         p = subprocess.Popen(f"{START_CMD} --listen", shell=True)
@@ -68,6 +68,6 @@ def web_instance():
         p.wait(3600)
 
 
-@stub.local_entrypoint()
+@app.local_entrypoint()
 def start_web_instance():
     web_instance.remote()
